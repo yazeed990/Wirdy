@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
-
+*{
+    scroll-behavior: smooth;
+}
 
 body{
     min-height: 100vh;
-    padding: 1rem 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -231,7 +233,7 @@ button.help-icon:hover{
 @media(min-width: 640px){
     body{
         gap: 2rem;
-        padding: 1rem 2rem
+        padding: 0 2rem
     }
 
     .rule-item p:first-of-type{
@@ -276,3 +278,41 @@ button.help-icon:hover{
     gap: 0.5rem
 }
 
+
+
+/* style it  */
+
+.nav-bar{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--background-muted);
+    margin: 0;
+    padding: 0;
+    min-height: 12vh;
+}
+.nav-bar > *{
+ color: white
+}
+
+.nav-bar > *:hover{
+    color: var(--color-link)
+   }
+
+.home{
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem
+}
+.home:hover{
+    color: white;
+}
+
+header{
+    padding: 0;
+}
+
+.logo-nav{
+    max-width: 40px;
+}

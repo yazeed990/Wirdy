@@ -5,7 +5,7 @@ export default function Hero(){
       <div className="even-columns gap-12 items-center">
         {/* Content Side */}
         <div className="space-y-6 max-w-xl">
-          <h2 className="text-3xl font-bold text-800">كيف أبدأ؟</h2>
+          <h2 id="WhereToStart" className="text-3xl font-bold text-800">كيف أبدأ؟</h2>
           <ul className="benefits-list list-disc pr-6 text-700 space-y-3">
             <li>خطوات يسيرة، تعرف كم يوم بقي لك، لتعان بحول الله وقوته على إنجاز حفظك لكتاب الله</li>
             <li>كن من أهل القرآن، الذين هم أهل الله وخاصته</li>
@@ -26,7 +26,7 @@ export default function Hero(){
       </div>
 
       {/* Five Shields Section */}
-      <div className="mt-16">
+      <div id="Ways" className="mt-16">
         <h3 className="text-2xl font-bold text-800 mb-4">
           <i>الحصون الخمس</i>
         </h3>

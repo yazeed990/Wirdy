@@ -2,8 +2,14 @@ export default function Layout(props){
 
     const {children}= props
 
-    const header = (
+    const header = (        
         <header>
+            <div className="nav-bar">
+                <a className="home" href=""><img className="logo-nav" src="public/Screenshot 2025-04-24 170744.png"/>الرئيسية</a>
+                <a href="#WhereToStart">كيف أبدأ؟</a>
+                <a href="#Days">جدول الحفظ</a>
+                <a href="#Ways">منهجيه</a>
+            </div>
             <h1 class="text-gradient ">وردي</h1>
             <p><strong>خلصت وردك؟</strong><br/>تسمع عن "أحفظ القران في سنتين، صفحة كل يوم"؟
 

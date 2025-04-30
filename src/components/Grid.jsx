@@ -44,7 +44,7 @@ export default function Grid() {
 
     return (
         
-        <div className="training-plan-grid">
+        <div id="Days" className="training-plan-grid">
             { Object.keys(training_plan).map((memorise, workoutIndex) => {
                 const isLocked = workoutIndex === 0 ? 
                 false : 
@@ -62,12 +62,12 @@ export default function Grid() {
                 const dayNum =  workoutIndex + 1
                 const icon = 
                 workoutIndex % 3 === 0 ? (
-                    <img className='icon' src="/public/2quran_icon.png" />
+                    <img className='icon' src="public/2quran_icon.png" />
                 ) : (
                     workoutIndex % 3 === 1 ? (
-                        <img className="icon" src="/public/quran-icon.png"/>
+                        <img className="icon" src="public/quran-icon.png"/>
                     ) : (
-                        <img className='icon' src="/public/tasbih_icon.png" />
+                        <img className='icon' src="public/tasbih_icon.png" />
                     )
                 )
             
