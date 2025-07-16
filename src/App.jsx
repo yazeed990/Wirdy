@@ -1,18 +1,18 @@
-import Grid from "./components/Grid"
-import Hero from "./components/Hero"
-import Layout from "./components/Layout"
-
+import Grid from "./components/Grid";
+import Hero from "./components/Hero";
+import Layout from "./components/Layout";
+import ProgramSlider from "./components/Slider";
 
 function App() {
-
   return (
-   <Layout>   
+    <Layout>
       <main>
-      <Hero/>
+        <Hero />
+        <ProgramSlider />
         <Grid />
       </main>
-   </Layout>
-  )
+    </Layout>
+  );
 }
 
-export default App
+export default App;
