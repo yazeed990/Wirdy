@@ -474,7 +474,7 @@ select {
   color: var(--color-primary);
   padding: 0.5rem 0.75rem;
   border-radius: var(--border-radius-small);
-  width: 100%;
+ 
   /* max-width: fit-content; */
   outline: none;
   appearance: none;
@@ -566,18 +566,17 @@ progress {
 }
 
 progress::-webkit-progress-bar {
-  background: var(--background-main);
+  background-color: var(--background-muted);
   border: 1px solid var(--border-primary);
   border-radius: var(--highlight-border-radius);
 }
 
 progress::-webkit-progress-value {
-  background-color: var(--color-link);
+  
   border-radius: var(--border-radius-small);
 }
 
 progress::-moz-progress-bar {
-  background-color: var(--color-link);
   border-radius: var(--border-radius-small);
 }
 

@@ -48,55 +48,68 @@ export default function QuranCard(props) {
       </div>
 
       <div className="custom-framework workout-grid  rounded-xl shadow">
-        
         {Object.entries(trainingPlan).map(([key, value]) => {
           if (key === "name") {
             return;
           }
-          
-          
 
           return value.map((Exercise, Index) => {
             return (
               <React.Fragment key={Index}>
-                <div className="bg-slate-950 backdrop-blur-md rounded-2xl "
-                
-                >
-               {Index === 0?<> 
-               <div className="custom-framework exercise-name  ">
-                  <h4>{key.split("_").join(" ")}</h4>
-                </div>
-                <h6>جلسة</h6>
-                <h6>التكرار</h6>
-                <h6 className="custom-framework weight-input">عدد المكملة</h6></> : ""}
-                <div className="custom-framework exercise-name">
-                  <p>{Exercise.name} </p>
-                  <button
-                    onClick={() => {
-                      setShowReciteDescription({
-                        name: Exercise.name,
-                        description: exerciseDescriptions[Exercise.name],
-                      });
-                    }}
-                    className="custom-framework help-icon"
-                  >
-                    <i className="custom-framework fa-regular fa-circle-question" />
-                  </button>
-                </div>
-                <p className="custom-framework exercise-info">
-                  {Exercise.unit}
-                </p>
-                <p className="custom-framework exercise-info">
-                  {Exercise.amount}
-                </p>
-                <input
-                  value={weights[Exercise.name] || ""}
-                  onChange={(e) => {
-                    handleAddWeight(Exercise.name, e.target.value);
-                  }}
-                  className="custom-framework weight-input"
-                  placeholder="دون هنا . . ."
-                />
+                <div className="bg-slate-950 backdrop-blur-md rounded-2xl ">
+                  {Index === 0 ? (
+                    <>
+                      <div className="custom-framework exercise-name  ">
+                        <h4>{key.split("_").join(" ")}</h4>
+                      </div>
+                      <h6>جلسة</h6>
+                      <h6>التكرار</h6>
+                      <h6 className="custom-framework weight-input">
+                        عدد المكملة
+                      </h6>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <div className="custom-framework exercise-name">
+                    <p>{Exercise.name} </p>
+                    <button
+                      onClick={() => {
+                        setShowReciteDescription({
+                          name: Exercise.name,
+                          description: exerciseDescriptions[Exercise.name],
+                        });
+                      }}
+                      className="custom-framework help-icon"
+                    >
+                      <i className="custom-framework fa-regular fa-circle-question" />
+                    </button>
+                  </div>
+                  <p className="custom-framework exercise-info">
+                    {Exercise.unit}
+                  </p>
+                  <p className="custom-framework exercise-info">
+                    {Exercise.amount}
+                  </p>
+                  <div className=" ">
+                    <input
+                      value={weights[Exercise.name] || ""}
+                      onChange={(e) => {
+                        handleAddWeight(Exercise.name, e.target.value);
+                      }}
+                      className="custom-framework w-18 sm:w-auto"
+                      placeholder="دون هنا . . ."
+                    />
+                    <progress
+                      className={`w-18 sm:w-54 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg   
+                        [&::-webkit-progress-bar]:bg-slate-300 ${
+                          weights[Exercise.name] >= Exercise.amount
+                            ? "[&::-webkit-progress-value]:bg-green-500"
+                            : "[&::-webkit-progress-value]:bg-blue-400"
+                        } [&::-moz-progress-bar]:bg-violet-400`}
+                      value={weights[Exercise.name] / Exercise.amount || ""}
+                    />
+                  </div>
                 </div>
               </React.Fragment>
             );

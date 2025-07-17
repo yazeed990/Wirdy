@@ -48,7 +48,10 @@ export default function Layout(props) {
     <footer>
       <p>
         صمم بواسطة{" "}
-        <a href="/" target="_blank">
+        <a
+          href="https://www.linkedin.com/in/yazeed-almalaq-783435350/"
+          target="_blank"
+        >
           يزيد الملق
         </a>
       </p>

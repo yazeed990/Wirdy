@@ -127,7 +127,9 @@ export default function ProgramSlider() {
         <div className="program-summary">
           <div className="summary-item memorise-summary">
             <span className="summary-icon">📖</span>
-            <span className="summary-text">ورد {content[1].desc}</span>
+            <span className="summary-text">
+              ورد {content[1].desc.split("_").join(" ")}
+            </span>
             <span className="summary-count">
               {content[1].meta.length} تمارين
             </span>
@@ -135,7 +137,9 @@ export default function ProgramSlider() {
 
           <div className="summary-item recite-summary">
             <span className="summary-icon">📘</span>
-            <span className="summary-text">ورد {content[2].desc}</span>
+            <span className="summary-text">
+              ورد {content[2].desc.split("_").join(" ")}
+            </span>
             <span className="summary-count">
               {content[2].meta.length} تمارين
             </span>
