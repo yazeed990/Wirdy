@@ -15,6 +15,7 @@ export default function QuranCard(props) {
 
   const [showReciteDescription, setShowReciteDescription] = useState(null);
   const [weights, setWeights] = useState(savedWeights || {});
+  const [borderCheck, setBorderCheck] = useState(false);
 
   function handleAddWeight(title, weight) {
     const newObj = {
@@ -52,12 +53,17 @@ export default function QuranCard(props) {
           if (key === "name") {
             return;
           }
+          
+          
 
           return value.map((Exercise, Index) => {
             return (
               <React.Fragment key={Index}>
+                <div className="bg-slate-950 backdrop-blur-md rounded-2xl "
+                
+                >
                {Index === 0?<> 
-               <div className="custom-framework exercise-name">
+               <div className="custom-framework exercise-name  ">
                   <h4>{key.split("_").join(" ")}</h4>
                 </div>
                 <h6>جلسة</h6>
@@ -91,6 +97,7 @@ export default function QuranCard(props) {
                   className="custom-framework weight-input"
                   placeholder="دون هنا . . ."
                 />
+                </div>
               </React.Fragment>
             );
           });

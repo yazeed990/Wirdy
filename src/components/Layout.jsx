@@ -16,8 +16,13 @@ export default function Layout(props) {
   );
 
   const preview = (
-    <div className="custom-framework even-columns ">
-      <div className="custom-framework text flex flex-col gap-10">
+    <div
+      style={{
+        background: "repeating-linear-gradient(#1a1e32 0.3%, transparent)",
+      }}
+      className=" flex justify-between items-center  py-5 px-3 "
+    >
+      <div className="custom-framework text-md space-y-3 sm:text-lg sm:space-y-8 md:text-2xl">
         <p>
           <strong>خلصت وردك؟</strong>
         </p>
