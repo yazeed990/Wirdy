@@ -91,7 +91,6 @@ export default function ProgramSlider() {
   ];
 
   const productTemplate = (program, index) => {
-    // ✅ نفس طريقتك القديمة
     const content = Object.entries(program.data).map(([key, value]) => {
       return { desc: key, meta: value };
     });
@@ -118,8 +117,8 @@ export default function ProgramSlider() {
 
     return (
       <div
-        className={`surface-border border-round m-2 text-center py-8  px-2 bg-linear-120 bg-sky-${
-          current ? "600" : "900"
+        className={`surface-border border-round m-2 text-center py-8  px-2 bg-linear-120 ${
+          current ? " bg-sky-600 " : " bg-sky-900 "
         } rounded-4xl`}
         style={getCardStyle(index)}
       >
