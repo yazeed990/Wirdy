@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import { exerciseDescriptions } from "../utils/index.js";
+import { Button } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import { usePrograms } from "../zustand-1/Zustand-Programs.jsx";
 export default function QuranCard(props) {
+  const handleOpenModal = usePrograms((state) => state.handleOpenModal);
+  const changecompletedDay = usePrograms((state) => state.changecompletedDay);
   const {
     trainingPlan,
     workoutIndex,
@@ -119,18 +124,24 @@ export default function QuranCard(props) {
 
       <div className="custom-framework workout-buttons">
         <button
+          className="bg-slate-800 text-white px-4 py-1 rounded-md hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
           onClick={() => {
             handleSave(workoutIndex, { weights });
           }}
         >
           أحفظ و ضع أكملت
         </button>
+
         <button
+          className="bg-green-600 text-white px-4 py-1 rounded-md hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
           onClick={() => {
-            handleComplete(workoutIndex, { weights });
+            handleComplete(workoutIndex, { weights }), handleOpenModal();
+            changecompletedDay(workoutIndex + 1);
           }}
         >
-          تم الأنجاز!
+          {" "}
+          تم الأنجاز
+          <DoneIcon />
         </button>
       </div>
     </div>

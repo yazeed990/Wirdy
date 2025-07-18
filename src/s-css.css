@@ -97,7 +97,6 @@
 }
 
 * {
-  
   box-sizing: border-box;
   font-family: "Noto Sans Arabic", sans-serif;
 }
@@ -427,7 +426,7 @@ input[type="radio"] {
   cursor: pointer;
 }
 
-button {
+.fan button {
   color: var(--color-primary);
   background-color: var(--background-primary);
   width: fit-content;
@@ -442,18 +441,18 @@ button {
   transition-duration: 200ms;
 }
 
-button:hover {
+.fan button:hover {
   box-shadow: 0 0 0 0 var(--border-secondary);
   transform: translate(2px, 2px);
 }
 
-button[disabled]:hover {
+.fan button[disabled]:hover {
   box-shadow: 2px 2px 0 0 var(--border-secondary);
   transform: translate(0, 0);
 }
 
-button:disabled,
-button[disabled] {
+.fan button:disabled,
+.fan button[disabled] {
   border: 1.5px solid var(--border-secondary);
   cursor: initial;
   opacity: 0.55;
@@ -474,7 +473,7 @@ select {
   color: var(--color-primary);
   padding: 0.5rem 0.75rem;
   border-radius: var(--border-radius-small);
- 
+
   /* max-width: fit-content; */
   outline: none;
   appearance: none;
@@ -572,7 +571,6 @@ progress::-webkit-progress-bar {
 }
 
 progress::-webkit-progress-value {
-  
   border-radius: var(--border-radius-small);
 }
 

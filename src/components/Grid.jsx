@@ -4,12 +4,12 @@ import QuranCard from "./QuranCard.jsx";
 import { usePrograms } from "../zustand-1/Zustand-Programs.jsx";
 import { Button, Modal, Typography, Box, Paper } from "@mui/material";
 import Confetti from "react-confetti";
+import { qoutesListOnAlim } from "../utils/index.js";
 
 export default function Grid() {
-  const [open, setOpen] = useState(false);
-
-  const handleOpenModal = () => setOpen(true);
-  const handleCloseModal = () => setOpen(false);
+  const open = usePrograms((state) => state.open);
+  const completedDay = usePrograms((state) => state.completedDay);
+  const handleCloseModal = usePrograms((state) => state.handleCloseModal);
 
   const selectedProgram = usePrograms((state) => state.selectedProgram);
 
@@ -131,10 +131,7 @@ export default function Grid() {
                   }
                   setSelectedWorkout(workoutIndex);
                 }}
-                className={
-                  "custom-framework card plan-card " +
-                  (isLocked ? "inactive" : "")
-                }
+                className={"fan card plan-card " + (isLocked ? "inactive" : "")}
                 key={workoutIndex}
               >
                 <div className="custom-framework plan-card-header">
@@ -155,29 +152,43 @@ export default function Grid() {
           }
         })}
       </div>
-      <Button onClick={handleOpenModal} sx={{display: "none"}}>open model</Button>
+
       <Modal open={open} onClose={handleCloseModal}>
-         <Box sx={{ width: "100%", height: "10%" }}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "#1a1e32",
-            borderRadius: 1,
-            boxShadow: 24,
-            p: 10,
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-         
-            <Typography variant="h6" component="h2">
+        <Box sx={{ width: "100%", height: "10%" }}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              borderRadius: 1,
+              boxShadow: 24,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+            className="bg-emerald-400 w-80 p-10 text-center gap-5 "
+          >
+            <Typography
+              variant="h4"
+              sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}
+              component="h2"
+            >
               بارك الله فيك!
             </Typography>
+            <Typography
+              sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}
+              className="bg-green-300 p-3 rounded-sm text-stone-700"
+            >
+              "{" "}
+              {
+                qoutesListOnAlim[
+                  Math.floor(Math.random() * qoutesListOnAlim.length)
+                ]
+              }{" "}
+              "
+            </Typography>
+            <Typography sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}>اليوم: {completedDay} تم!</Typography>
           </Box>
 
           <Confetti />

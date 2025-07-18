@@ -114,10 +114,13 @@ export default function ProgramSlider() {
         direction: "rtl",
       };
     };
+    const current = program.data == selectedProgram;
 
     return (
       <div
-        className="surface-border border-round m-2 text-center py-8  px-2 bg-linear-120 bg-sky-900 rounded-4xl"
+        className={`surface-border border-round m-2 text-center py-8  px-2 bg-linear-120 bg-sky-${
+          current ? "600" : "900"
+        } rounded-4xl`}
         style={getCardStyle(index)}
       >
         <h3 className="program-title text-center mx-auto ">{program.title}</h3>
@@ -157,12 +160,19 @@ export default function ProgramSlider() {
           </div>
         </div>
 
-        <span
-          className="bg-blue-950 text-white px-4 py-1 rounded-2xl hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
-          onClick={() => changeProgram(program.data)}
-        >
-          اضغط للاختيار
-        </span>
+        {current ? (
+          <button
+            className="bg-blue-300 text-white px-4 py-1 rounded-2xl hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
+            onClick={() => changeProgram(program.data)}
+          >أخترت هذا البرنامج</button>
+        ) : (
+          <button
+            className="bg-blue-950 text-white px-4 py-1 rounded-2xl hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
+            onClick={() => changeProgram(program.data)}
+          >
+            اضغط للاختيار
+          </button>
+        )}
       </div>
     );
   };
