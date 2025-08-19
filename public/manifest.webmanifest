@@ -1,0 +1,15 @@
+{
+  "name": "وردي - متتبع حفظ القرآن",
+  "short_name": "وردي",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070f",
+  "theme_color": "#121424",
+  "icons": [
+    { "src": "/logo.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/quran-icon.png", "type": "image/png", "sizes": "256x256" },
+    { "src": "/2quran_icon.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

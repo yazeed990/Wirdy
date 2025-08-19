@@ -18,22 +18,17 @@ export default function ProgramSlider() {
 
   const responsiveOptions = [
     {
-      breakpoint: "1400px",
-      numVisible: 3,
-      numScroll: 2,
-    },
-    {
       breakpoint: "1199px",
       numVisible: 3,
       numScroll: 1,
     },
     {
-      breakpoint: "767px",
+      breakpoint: "991px",
       numVisible: 2,
       numScroll: 1,
     },
     {
-      breakpoint: "575px",
+      breakpoint: "767px",
       numVisible: 1,
       numScroll: 1,
     },
@@ -113,84 +108,97 @@ export default function ProgramSlider() {
         direction: "rtl",
       };
     };
-    const current = program.data == selectedProgram;
+    const current = !!(
+      program.data &&
+      selectedProgram &&
+      program.data.name === selectedProgram.name
+    );
 
     return (
-      <div
-        className={`surface-border border-round m-2 text-center py-8  px-2 bg-linear-120 ${
-          current ? " bg-sky-600 " : " bg-sky-900 "
-        } rounded-4xl`}
-        style={getCardStyle(index)}
-      >
-        <h3 className="program-title text-center mx-auto ">{program.title}</h3>
+      <div className="arabic-program-card" style={getCardStyle(index)}>
+        <div className="program-card-header">
+          <h3 className="arabic-program-title">{program.title}</h3>
+          {current && <div className="selected-badge">✓ محدد</div>}
+        </div>
 
-        <p className="program-description">{program.description}</p>
+        <p className="arabic-program-description">{program.description}</p>
 
-        <div className="program-summary">
-          <div className="summary-item memorise-summary">
-            <span className="summary-icon">📖</span>
-            <span className="summary-text">
-              ورد {content[1].desc.split("_").join(" ")}
+        <div className="arabic-program-stats">
+          <div className="stat-item">
+            <span className="stat-label">
+              {content[1].desc.split("_").join(" ")}
             </span>
-            <span className="summary-count">
-              {content[1].meta.length} تمارين
-            </span>
+            <span className="stat-value">{content[1].meta.length} تمارين</span>
           </div>
 
-          <div className="summary-item recite-summary">
-            <span className="summary-icon">📘</span>
-            <span className="summary-text">
-              ورد {content[2].desc.split("_").join(" ")}
+          <div className="stat-divider"></div>
+
+          <div className="stat-item">
+            <span className="stat-label">
+              {content[2].desc.split("_").join(" ")}
             </span>
-            <span className="summary-count">
-              {content[2].meta.length} تمارين
-            </span>
+            <span className="stat-value">{content[2].meta.length} تمارين</span>
           </div>
         </div>
 
-        <div className="program-preview flex flex-col justify-center items-center text-center gap-2">
-          <div className="preview-exercise">
-            <strong>مثال من {content[1].desc.split("_").join(" ")}:</strong>{" "}
-            {content[1].meta[0].name}
+        <div className="arabic-program-preview">
+          <div className="preview-item">
+            <span className="preview-label">نموذج الحفظ:</span>
+            <span className="preview-text">{content[1].meta[0].name}</span>
           </div>
-          <div className="preview-exercise">
-            <strong>مثال من {content[2].desc.split("_").join(" ")}:</strong>{" "}
-            {content[2].meta[0].name}
+          <div className="preview-item">
+            <span className="preview-label">نموذج المراجعة:</span>
+            <span className="preview-text">{content[2].meta[0].name}</span>
           </div>
         </div>
 
-        {current ? (
-          <button
-            className="bg-blue-300 text-white px-4 py-1 rounded-2xl hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
-            onClick={() => changeProgram(program.data)}
-          >أخترت هذا البرنامج</button>
-        ) : (
-          <button
-            className="bg-blue-950 text-white px-4 py-1 rounded-2xl hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
-            onClick={() => changeProgram(program.data)}
-          >
-            اضغط للاختيار
-          </button>
-        )}
+        <div className="program-card-footer">
+          {current ? (
+            <button className="arabic-btn selected" disabled>
+              البرنامج المحدد
+            </button>
+          ) : (
+            <button
+              className="arabic-btn primary"
+              onClick={() => changeProgram(program.data)}
+            >
+              اختيار هذا البرنامج
+            </button>
+          )}
+        </div>
       </div>
     );
   };
 
   return (
-    <>
-      <div style={{ direction: "ltr" }}>
+    <section className="arabic-slider-section" dir="rtl">
+      <div className="slider-container">
+        <div className="slider-header">
+          <h2 className="slider-title">اختر طريقة الحفظ المناسبة</h2>
+          <p className="slider-subtitle">
+            طرق مجربة ومعتمدة من علماء القرآن والحفاظ
+          </p>
+        </div>
+
         <Carousel
           value={programs}
-          numVisible={3}
-          numScroll={3}
+          numVisible={4}
+          numScroll={1}
           responsiveOptions={responsiveOptions}
-          className="custom-carousel overflow-x-hidden"
-          custom-framework
-          autoplayInterval={3000}
+          className="arabic-carousel"
+          autoplayInterval={6000}
           itemTemplate={productTemplate}
-          rtl
+          circular={true}
+          showIndicators={true}
+          showNavigators={true}
+          orientation="horizontal"
+          pt={{
+            root: { style: { direction: "rtl" } },
+            content: { style: { direction: "rtl" } },
+            container: { style: { direction: "rtl" } },
+          }}
         />
       </div>
-    </>
+    </section>
   );
 }

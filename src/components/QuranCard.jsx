@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import { exerciseDescriptions } from "../utils/index.js";
-import { Button } from "@mui/material";
+//
 import DoneIcon from "@mui/icons-material/Done";
 import { usePrograms } from "../zustand-1/Zustand-Programs.jsx";
 export default function QuranCard(props) {
@@ -16,6 +16,7 @@ export default function QuranCard(props) {
     savedWeights,
     handleSave,
     handleComplete,
+    onClose,
   } = props;
 
   const [showReciteDescription, setShowReciteDescription] = useState(null);
@@ -30,119 +31,195 @@ export default function QuranCard(props) {
     setWeights(newObj);
   }
 
+  // Calculate overall progress
+  const totalExercises = Object.entries(trainingPlan)
+    .filter(([key]) => key !== "name")
+    .reduce((total, [, exercises]) => total + exercises.length, 0);
+
+  const completedExercises = Object.entries(trainingPlan)
+    .filter(([key]) => key !== "name")
+    .reduce((completed, [, exercises]) => {
+      return (
+        completed +
+        exercises.filter(
+          (exercise) =>
+            Number(weights[exercise.name]) >= Number(exercise.amount)
+        ).length
+      );
+    }, 0);
+
+  const overallProgress =
+    totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
+
   return (
-    <div className="custom-framework workout-container">
-      {showReciteDescription && (
-        <Modal
-          showReciteDescription={showReciteDescription}
-          handleCloseModal={() => {
-            setShowReciteDescription(null);
-          }}
-        />
-      )}
-      <div className="custom-framework workout-card card">
-        <div className="custom-framework plan-card-header">
-          <p>اليوم {dayNum}</p>
-          {icon}
-        </div>
-        <div className="custom-framework plan-card-header">
-          <h2>
-            <b>{type} </b>
-          </h2>
-        </div>
-      </div>
+    <div className="quran-card-container">
+      <div className="quran-card-inner">
+        {showReciteDescription && (
+          <Modal
+            showReciteDescription={showReciteDescription}
+            handleCloseModal={() => setShowReciteDescription(null)}
+          />
+        )}
 
-      <div className="custom-framework workout-grid  rounded-xl shadow">
-        {Object.entries(trainingPlan).map(([key, value]) => {
-          if (key === "name") {
-            return;
-          }
-
-          return value.map((Exercise, Index) => {
-            return (
-              <React.Fragment key={Index}>
-                <div className="bg-slate-950 backdrop-blur-md rounded-2xl ">
-                  {Index === 0 ? (
-                    <>
-                      <div className="custom-framework exercise-name  ">
-                        <h4>{key.split("_").join(" ")}</h4>
-                      </div>
-                      <h6>جلسة</h6>
-                      <h6>التكرار</h6>
-                      <h6 className="custom-framework weight-input">
-                        عدد المكملة
-                      </h6>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  <div className="custom-framework exercise-name">
-                    <p>{Exercise.name} </p>
-                    <button
-                      onClick={() => {
-                        setShowReciteDescription({
-                          name: Exercise.name,
-                          description: exerciseDescriptions[Exercise.name],
-                        });
-                      }}
-                      className="custom-framework help-icon"
-                    >
-                      <i className="custom-framework fa-regular fa-circle-question" />
-                    </button>
-                  </div>
-                  <p className="custom-framework exercise-info">
-                    {Exercise.unit}
-                  </p>
-                  <p className="custom-framework exercise-info">
-                    {Exercise.amount}
-                  </p>
-                  <div className=" ">
-                    <input
-                      value={weights[Exercise.name] || ""}
-                      onChange={(e) => {
-                        handleAddWeight(Exercise.name, e.target.value);
-                      }}
-                      className="custom-framework w-18 sm:w-auto"
-                      placeholder="دون هنا . . ."
-                    />
-                    <progress
-                      className={`w-18 sm:w-54 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg   
-                        [&::-webkit-progress-bar]:bg-slate-300 ${
-                          weights[Exercise.name] >= Exercise.amount
-                            ? "[&::-webkit-progress-value]:bg-green-500"
-                            : "[&::-webkit-progress-value]:bg-blue-400"
-                        } [&::-moz-progress-bar]:bg-violet-400`}
-                      value={weights[Exercise.name] / Exercise.amount || ""}
-                    />
-                  </div>
+        {/* Header Card */}
+        <div className="quran-card-header">
+          <div className="day-info">
+            <div className="day-number">
+              <span className="day-label">اليوم</span>
+              <span className="day-value">{dayNum}</span>
+            </div>
+            <div className="lesson-info">
+              <h2 className="lesson-title">{type}</h2>
+              <div className="progress-summary">
+                <span className="progress-text">
+                  {completedExercises} من {totalExercises} تمارين
+                </span>
+                <div className="progress-bar-mini">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${overallProgress}%` }}
+                  ></div>
                 </div>
-              </React.Fragment>
+              </div>
+            </div>
+          </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="quran-card-close-btn"
+              aria-label="إغلاق"
+              title="العودة إلى الجدول"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Exercises List */}
+        <div className="exercises-container">
+          {Object.entries(trainingPlan).map(([sectionKey, exercises]) => {
+            if (sectionKey === "name") return null;
+
+            const sectionName = sectionKey.split("_").join(" ");
+
+            return (
+              <div key={sectionKey} className="exercise-section">
+                <div className="section-header">
+                  <h3 className="section-title">{sectionName}</h3>
+                  <span className="section-count">
+                    {exercises.length} تمارين
+                  </span>
+                </div>
+
+                <div className="exercises-list">
+                  {exercises.map((exercise, index) => {
+                    const currentValue = Number(weights[exercise.name]) || 0;
+                    const targetValue = Number(exercise.amount);
+                    const progress =
+                      targetValue > 0 ? (currentValue / targetValue) * 100 : 0;
+                    const isCompleted = currentValue >= targetValue;
+
+                    return (
+                      <div
+                        key={index}
+                        className={`exercise-item ${
+                          isCompleted ? "completed" : ""
+                        }`}
+                      >
+                        <div className="exercise-header">
+                          <div className="exercise-info">
+                            <h4 className="exercise-name">{exercise.name}</h4>
+                            <span className="exercise-target">
+                              الهدف: {exercise.amount} {exercise.unit}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              setShowReciteDescription({
+                                name: exercise.name,
+                                description:
+                                  exerciseDescriptions[exercise.name],
+                              })
+                            }
+                            className="help-button"
+                            title={`تفاصيل ${exercise.name}`}
+                          >
+                            ?
+                          </button>
+                        </div>
+
+                        <div className="exercise-input-section">
+                          <div className="input-group">
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              value={weights[exercise.name] || ""}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(
+                                  /[^0-9]/g,
+                                  ""
+                                );
+                                handleAddWeight(exercise.name, val);
+                              }}
+                              className="exercise-input"
+                              placeholder="0"
+                              min="0"
+                              max={targetValue * 2}
+                            />
+                            <span className="input-unit">{exercise.unit}</span>
+                          </div>
+
+                          <div className="progress-section">
+                            <div className="progress-bar">
+                              <div
+                                className={`progress-fill ${
+                                  isCompleted ? "completed" : ""
+                                }`}
+                                style={{ width: `${Math.min(progress, 100)}%` }}
+                              ></div>
+                            </div>
+                            <span className="progress-percentage">
+                              {Math.round(progress)}%
+                            </span>
+                          </div>
+                        </div>
+
+                        {isCompleted && (
+                          <div className="completion-badge">مكتمل</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             );
-          });
-        })}
-      </div>
+          })}
+        </div>
 
-      <div className="custom-framework workout-buttons">
-        <button
-          className="bg-slate-800 text-white px-4 py-1 rounded-md hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
-          onClick={() => {
-            handleSave(workoutIndex, { weights });
-          }}
-        >
-          أحفظ و ضع أكملت
-        </button>
+        {/* Action Buttons */}
+        <div className="quran-card-actions">
+          <button
+            className="btn btn-secondary btn-lg"
+            onClick={() => handleSave(workoutIndex, { weights })}
+            disabled={Object.keys(weights).length === 0}
+          >
+            حفظ التقدم
+          </button>
 
-        <button
-          className="bg-green-600 text-white px-4 py-1 rounded-md hover:bg-blue-900 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 hover:-translate-y-0.5 active:scale-90 transition-transform duration-75 font-medium cursor-pointer"
-          onClick={() => {
-            handleComplete(workoutIndex, { weights }), handleOpenModal();
-            changecompletedDay(workoutIndex + 1);
-          }}
-        >
-          {" "}
-          تم الأنجاز
-          <DoneIcon />
-        </button>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={() => {
+              handleComplete(workoutIndex, { weights });
+              handleOpenModal();
+              changecompletedDay(workoutIndex + 1);
+            }}
+            disabled={overallProgress < 100}
+          >
+            {overallProgress >= 100
+              ? "إنجاز اليوم"
+              : `باقي ${Math.round(100 - overallProgress)}%`}
+          </button>
+        </div>
       </div>
     </div>
   );

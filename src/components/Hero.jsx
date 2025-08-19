@@ -1,11 +1,14 @@
 export default function Hero() {
   return (
     <>
-      <section className="custom-framework how-to hidden hero px-6 py-12  text-right">
+      <section className="custom-framework how-to hero px-6 py-12  text-right">
         <div className="custom-framework even-columns gap-12 items-center">
           {/* Content Side */}
           <div className="custom-framework space-y-6 max-w-xl">
-            <h2 id="WhereToStart" className="custom-framework text-3xl font-bold text-800">
+            <h2
+              id="WhereToStart"
+              className="custom-framework text-3xl font-bold text-800"
+            >
               كيف أبدأ؟
             </h2>
             <ul className="custom-framework benefits-list list-disc pr-6 text-700 space-y-3">

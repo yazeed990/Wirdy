@@ -10,8 +10,10 @@ export default function Grid() {
   const open = usePrograms((state) => state.open);
   const completedDay = usePrograms((state) => state.completedDay);
   const handleCloseModal = usePrograms((state) => state.handleCloseModal);
+  const resetProgress = usePrograms((state) => state.resetProgress);
 
   const selectedProgram = usePrograms((state) => state.selectedProgram);
+  const setCurrentWorkoutIndex = usePrograms((s) => s.setCurrentWorkoutIndex);
 
   const [training_plan, setTraining_plan] = useState({});
   const [savedWorkouts, setSavedWorkouts] = useState(null);
@@ -21,6 +23,15 @@ export default function Grid() {
         (val) => savedWorkouts[val].isComplete
       )
     : [];
+
+  useEffect(() => {
+    const onOpen = (e) => {
+      // If a specific index is stored, open that; otherwise open the next available
+      setSelectedWorkout((prev) => prev ?? 0);
+    };
+    window.addEventListener("open-workout-request", onOpen);
+    return () => window.removeEventListener("open-workout-request", onOpen);
+  }, []);
 
   useEffect(() => {
     const numberOfDays =
@@ -40,6 +51,10 @@ export default function Grid() {
       [index]: {
         ...data,
         isComplete: !!data.isComplete || !!savedWorkouts?.[index]?.isComplete,
+        completedAt:
+          !!data.isComplete && !savedWorkouts?.[index]?.completedAt
+            ? Date.now()
+            : savedWorkouts?.[index]?.completedAt,
       },
     };
 
@@ -48,6 +63,24 @@ export default function Grid() {
       `Quran-tracker-${selectedProgram?.name || "fiveShields"}`,
       JSON.stringify(newObj)
     );
+    try {
+      window.dispatchEvent(
+        new CustomEvent("quran-progress-updated", {
+          detail: { programName: selectedProgram?.name, data: newObj },
+        })
+      );
+    } catch {}
+    // cloud sync (fire-and-forget)
+    import("../firebase/index").then(async (m) => {
+      try {
+        const user = await m.ensureSignedIn();
+        await m.saveProgress(
+          user.uid,
+          selectedProgram?.name || "fiveShields",
+          newObj
+        );
+      } catch {}
+    });
     setSelectedWorkout(null);
   }
 
@@ -76,9 +109,53 @@ export default function Grid() {
     setSavedWorkouts(savedData);
   }, [selectedProgram?.name]);
 
+  // Check if any workout is selected
+  const selectedWorkoutData =
+    selectedWorkout !== null
+      ? Object.keys(training_plan)[selectedWorkout]
+      : null;
+  const selectedWorkoutPlan = selectedWorkoutData
+    ? training_plan[selectedWorkoutData]
+    : null;
+
   return (
     <>
-      <div id="Days" className="custom-framework training-plan-grid">
+      {/* Render QuranCard outside the grid if one is selected */}
+      {selectedWorkout !== null && selectedWorkoutPlan && (
+        <QuranCard
+          savedWeights={savedWorkouts?.[selectedWorkout]?.weights}
+          handleSave={handleSave}
+          handleComplete={handleComplete}
+          key={selectedWorkout}
+          trainingPlan={selectedWorkoutPlan}
+          type={
+            selectedWorkout === 0
+              ? "الصفحة " + (selectedWorkout + 3)
+              : (selectedWorkout + 3) % 20 === 0
+              ? "مراجعة"
+              : "الصفحة " + (selectedWorkout + 3)
+          }
+          workoutIndex={selectedWorkout}
+          icon={
+            selectedWorkout % 3 === 0 ? (
+              <img className="custom-framework icon" src="/2quran_icon.png" />
+            ) : selectedWorkout % 3 === 1 ? (
+              <img className="custom-framework icon" src="/quran-icon.png" />
+            ) : (
+              <img className="custom-framework icon" src="/tasbih_icon.png" />
+            )
+          }
+          dayNum={selectedWorkout + 1}
+          onClose={() => setSelectedWorkout(null)}
+        />
+      )}
+
+      <section
+        id="Days"
+        className="training-plan-grid animate-fade-in"
+        aria-live="polite"
+        aria-label="جدول الأيام التدريبية"
+      >
         {Object.keys(training_plan).map((memorise, workoutIndex) => {
           const isLocked =
             workoutIndex === 0
@@ -106,20 +183,9 @@ export default function Grid() {
               <img className="custom-framework icon" src="/tasbih_icon.png" />
             );
 
+          // Skip rendering the grid card if it's selected (QuranCard is rendered above)
           if (workoutIndex === selectedWorkout) {
-            return (
-              <QuranCard
-                savedWeights={savedWorkouts?.[workoutIndex]?.weights}
-                handleSave={handleSave}
-                handleComplete={handleComplete}
-                key={workoutIndex}
-                trainingPlan={trainingPlan}
-                type={type}
-                workoutIndex={workoutIndex}
-                icon={icon}
-                dayNum={dayNum}
-              />
-            );
+            return null;
           }
 
           if (selectedProgram) {
@@ -130,30 +196,64 @@ export default function Grid() {
                     return;
                   }
                   setSelectedWorkout(workoutIndex);
+                  setCurrentWorkoutIndex(workoutIndex);
                 }}
-                className={"fan card plan-card " + (isLocked ? "inactive" : "")}
+                className={`plan-card animate-fade-in ${
+                  isLocked ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                } ${
+                  completedWorkouts.includes(String(workoutIndex))
+                    ? "selected"
+                    : ""
+                }`}
                 key={workoutIndex}
+                aria-disabled={isLocked}
+                aria-label={`اليوم ${dayNum} - ${type}${
+                  isLocked ? " مقفل" : ""
+                }`}
               >
-                <div className="custom-framework plan-card-header">
-                  <p>اليوم {dayNum}</p>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-accent">
+                      #{dayNum}
+                    </span>
+                    <span className="text-sm text-secondary">يوم</span>
+                  </div>
+                  {isLocked && (
+                    <span className="text-sm text-secondary">مقفل</span>
+                  )}
                 </div>
-                {isLocked ? (
-                  <i className="custom-framework fa-solid fa-lock"></i>
-                ) : (
-                  icon
-                )}
-                <div className="custom-framework plan-card-header">
-                  <h4>
-                    <b>{type}</b>
+
+                <div className="text-center mb-3">
+                  <h4 className="text-lg font-semibold text-primary mb-1">
+                    {type}
                   </h4>
+                  <span
+                    className={`badge ${
+                      completedWorkouts.includes(String(workoutIndex))
+                        ? "badge-success"
+                        : isLocked
+                        ? "badge-warning"
+                        : "badge-info"
+                    }`}
+                  >
+                    {completedWorkouts.includes(String(workoutIndex))
+                      ? "مكتمل"
+                      : isLocked
+                      ? "مقفل"
+                      : "متاح"}
+                  </span>
                 </div>
               </button>
             );
           }
         })}
-      </div>
+      </section>
 
-      <Modal open={open} onClose={handleCloseModal}>
+      <Modal
+        open={open}
+        onClose={handleCloseModal}
+        aria-labelledby="congrats-title"
+      >
         <Box sx={{ width: "100%", height: "10%" }}>
           <Box
             sx={{
@@ -168,11 +268,14 @@ export default function Grid() {
               flexDirection: "column",
             }}
             className="bg-emerald-400 w-80 p-10 text-center gap-5 "
+            role="dialog"
+            aria-modal="true"
           >
             <Typography
               variant="h4"
               sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}
               component="h2"
+              id="congrats-title"
             >
               بارك الله فيك!
             </Typography>
@@ -188,7 +291,27 @@ export default function Grid() {
               }{" "}
               "
             </Typography>
-            <Typography sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}>اليوم: {completedDay} تم!</Typography>
+            <Typography sx={{ fontFamily: "Noto Sans Arabic, sans-serif" }}>
+              اليوم: {completedDay} تم!
+            </Typography>
+            <div className="flex gap-2">
+              <button
+                className="bg-blue-950 text-white px-4 py-1 rounded-md"
+                onClick={() => handleCloseModal()}
+              >
+                إغلاق
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-1 rounded-md"
+                onClick={() => {
+                  resetProgress(selectedProgram?.name);
+                  handleCloseModal();
+                  window.location.reload();
+                }}
+              >
+                إعادة تعيين التقدم
+              </button>
+            </div>
           </Box>
 
           <Confetti />

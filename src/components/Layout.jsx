@@ -1,19 +1,14 @@
+import { useState } from "react";
+import StatsBar from "./StatsBar.jsx";
+import Settings from "./Settings.jsx";
+import Navbar from "./Navbar.jsx";
+import HeroPreview from "./HeroPreview.jsx";
+
 export default function Layout(props) {
   const { children } = props;
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const header = (
-    <header>
-      <div className="custom-framework nav-bar">
-        <a className="custom-framework home text-gradient" href="">
-          <img className="custom-framework logo-nav" src="/logo.png" />
-          وردي
-        </a>
-        <a href="#WhereToStart">كيف أبدأ؟</a>
-        <a href="#Days">جدول الحفظ</a>
-        <a href="#Ways">منهجيه</a>
-      </div>
-    </header>
-  );
+  const header = <Navbar onOpenSettings={() => setSettingsOpen(true)} />;
 
   const preview = (
     <div
@@ -61,7 +56,11 @@ export default function Layout(props) {
   return (
     <>
       {header}
-      {preview}
+      <HeroPreview />
+      <StatsBar />
+      {settingsOpen && (
+        <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      )}
       {children}
       {footer}
     </>
