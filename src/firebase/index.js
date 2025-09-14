@@ -46,7 +46,9 @@ export function initFirebase() {
         .then(({ getAnalytics }) => {
           try {
             getAnalytics(app);
-          } catch {}
+          } catch (error) {
+            console.error("Analytics initialization failed:", error);
+          }
         })
         .catch(() => {});
     }
@@ -74,7 +76,9 @@ export async function signUpWithEmail(email, password, displayName) {
   if (displayName) {
     try {
       await updateProfile(res.user, { displayName });
-    } catch {}
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
   }
   return res.user;
 }

@@ -25,7 +25,7 @@ export default function Grid() {
     : [];
 
   useEffect(() => {
-    const onOpen = (e) => {
+    const onOpen = () => {
       // If a specific index is stored, open that; otherwise open the next available
       setSelectedWorkout((prev) => prev ?? 0);
     };
@@ -69,7 +69,9 @@ export default function Grid() {
           detail: { programName: selectedProgram?.name, data: newObj },
         })
       );
-    } catch {}
+    } catch (error) {
+      console.error("Failed to update progress:", error);
+    }
     // cloud sync (fire-and-forget)
     import("../firebase/index").then(async (m) => {
       try {
@@ -79,7 +81,9 @@ export default function Grid() {
           selectedProgram?.name || "fiveShields",
           newObj
         );
-      } catch {}
+      } catch (error) {
+        console.error("Failed to update progress:", error);
+      }
     });
     setSelectedWorkout(null);
   }
@@ -172,16 +176,7 @@ export default function Grid() {
               ? `حزب ${(workoutIndex + 3) / 10}`
               : "الصفحة " + page;
 
-          const trainingPlan = training_plan[workoutIndex];
           const dayNum = workoutIndex + 1;
-          const icon =
-            workoutIndex % 3 === 0 ? (
-              <img className="custom-framework icon" src="/2quran_icon.png" />
-            ) : workoutIndex % 3 === 1 ? (
-              <img className="custom-framework icon" src="/quran-icon.png" />
-            ) : (
-              <img className="custom-framework icon" src="/tasbih_icon.png" />
-            );
 
           // Skip rendering the grid card if it's selected (QuranCard is rendered above)
           if (workoutIndex === selectedWorkout) {

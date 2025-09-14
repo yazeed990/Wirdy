@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePrograms } from "../zustand-1/Zustand-Programs.jsx";
 
 function computeStreaks(entries) {
@@ -24,7 +24,6 @@ function computeStreaks(entries) {
   // adjust for today continuation
   const today = new Date();
   const last = days[days.length - 1];
-  const lastDay = new Date(last);
   const delta = Math.floor(
     (new Date(
       today.getFullYear(),

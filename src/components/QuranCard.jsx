@@ -12,7 +12,6 @@ export default function QuranCard(props) {
     workoutIndex,
     type,
     dayNum,
-    icon,
     savedWeights,
     handleSave,
     handleComplete,
@@ -21,7 +20,6 @@ export default function QuranCard(props) {
 
   const [showReciteDescription, setShowReciteDescription] = useState(null);
   const [weights, setWeights] = useState(savedWeights || {});
-  const [borderCheck, setBorderCheck] = useState(false);
 
   function handleAddWeight(title, weight) {
     const newObj = {

@@ -1,5 +1,13 @@
-const CACHE_NAME = "wardi-cache-v1";
-const ASSETS = ["/", "/index.html", "/manifest.webmanifest", "/logo.png"];
+const CACHE_NAME = "wardi-cache-v2";
+const ASSETS = [
+  "/",
+  "/index.html",
+  "/manifest.webmanifest",
+  "/logo.png",
+  "/quran-icon.png",
+  "/2quran_icon.png",
+  "/tasbih_icon.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -26,17 +34,30 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
+
+  // Handle navigation requests (SPA routing)
+  if (request.mode === "navigate") {
+    event.respondWith(
+      caches.match("/index.html").then((cached) => {
+        return cached || fetch("/index.html");
+      })
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then(
       (cached) =>
         cached ||
         fetch(request)
           .then((response) => {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            if (response.ok) {
+              const copy = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            }
             return response;
           })
-          .catch(() => cached)
+          .catch(() => cached || caches.match("/index.html"))
     )
   );
 });

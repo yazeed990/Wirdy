@@ -7,14 +7,16 @@ export const usePrograms = create((set) => ({
     set(() => {
       try {
         localStorage.setItem("Quran-selected-program", chosen?.name || "");
-      } catch {}
+      } catch (error) {
+        console.error("Failed to save program selection:", error);
+      }
       return { selectedProgram: chosen };
     }),
   open: false,
-  handleOpenModal: () => set((state) => ({ open: true })),
-  handleCloseModal: () => set((state) => ({ open: false })),
+  handleOpenModal: () => set(() => ({ open: true })),
+  handleCloseModal: () => set(() => ({ open: false })),
   completedDay: 0,
-  changecompletedDay: (day) => set((state) => ({ completedDay: day })),
+  changecompletedDay: (day) => set(() => ({ completedDay: day })),
   initFromStorage: () =>
     set(() => {
       try {
@@ -22,7 +24,8 @@ export const usePrograms = create((set) => ({
         const selected =
           saved && methodsByName[saved] ? methodsByName[saved] : fiveShields;
         return { selectedProgram: selected };
-      } catch {
+      } catch (error) {
+        console.error("Failed to load program from storage:", error);
         return { selectedProgram: fiveShields };
       }
     }),
@@ -31,7 +34,9 @@ export const usePrograms = create((set) => ({
       try {
         const key = `Quran-tracker-${programName || "fiveShields"}`;
         localStorage.removeItem(key);
-      } catch {}
+      } catch (error) {
+        console.error("Failed to reset progress:", error);
+      }
       return {};
     }),
   currentWorkoutIndex: null,

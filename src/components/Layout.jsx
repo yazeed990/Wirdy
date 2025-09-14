@@ -10,7 +10,7 @@ export default function Layout(props) {
 
   const header = <Navbar onOpenSettings={() => setSettingsOpen(true)} />;
 
-  const preview = (
+  const _preview = (
     <div
       style={{
         background: "repeating-linear-gradient(#1a1e32 0.3%, transparent)",

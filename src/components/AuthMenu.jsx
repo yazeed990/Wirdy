@@ -7,7 +7,6 @@ import {
   signUpWithEmail,
   signInWithEmail,
   sendReset,
-  linkAnonymousToEmail,
 } from "../firebase/index";
 
 export default function AuthMenu() {
@@ -71,7 +70,9 @@ export default function AuthMenu() {
             onClick={async () => {
               try {
                 await signInWithGoogle();
-              } catch {}
+              } catch (error) {
+                console.error("Google sign-in error:", error);
+              }
             }}
           >
             Google
@@ -170,7 +171,9 @@ export default function AuthMenu() {
                   try {
                     await signInWithGoogle();
                     setOpen(false);
-                  } catch {}
+                  } catch (error) {
+                    console.error("Google sign-in error:", error);
+                  }
                 }}
               >
                 دخول بـ Google

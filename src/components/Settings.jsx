@@ -16,7 +16,9 @@ export default function Settings({ open, onClose }) {
     try {
       const t = localStorage.getItem("Quran-reminder-time");
       if (t) setTime(t);
-    } catch {}
+    } catch (error) {
+      console.error("Settings error:", error);
+    }
   }, []);
 
   if (!open) return null;
@@ -33,7 +35,9 @@ export default function Settings({ open, onClose }) {
       a.download = `${selectedProgram?.name || "fiveShields"}-progress.json`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {}
+    } catch (error) {
+      console.error("Settings error:", error);
+    }
   }
 
   function importData(file) {
@@ -70,7 +74,9 @@ export default function Settings({ open, onClose }) {
       localStorage.setItem("Quran-reminder-time", time);
       scheduleNext(time);
       alert("تم تفعيل التذكير اليومي.");
-    } catch {}
+    } catch (error) {
+      console.error("Settings error:", error);
+    }
   }
 
   function scheduleNext(hhmm) {
@@ -83,7 +89,9 @@ export default function Settings({ open, onClose }) {
     window.setTimeout(() => {
       try {
         new Notification("وردي", { body: "حان وقت وردك اليومي!" });
-      } catch {}
+      } catch (error) {
+        console.error("Settings error:", error);
+      }
       // schedule the next one
       scheduleNext(hhmm);
     }, delay);
@@ -151,7 +159,9 @@ export default function Settings({ open, onClose }) {
                   try {
                     await signInWithGoogle();
                     alert("تم تسجيل الدخول عبر Google.");
-                  } catch {}
+                  } catch (error) {
+                    console.error("Settings error:", error);
+                  }
                 }}
               >
                 تسجيل دخول Google
@@ -222,7 +232,9 @@ export default function Settings({ open, onClose }) {
                     })
                   );
                   alert("تم مسح التقدم لهذا البرنامج.");
-                } catch {}
+                } catch (error) {
+                  console.error("Settings error:", error);
+                }
               }}
             >
               مسح تقدم البرنامج الحالي

@@ -24,7 +24,9 @@ export default function InstallPWAButton() {
           await deferred.prompt();
           const { outcome } = await deferred.userChoice;
           if (outcome) setDeferred(null);
-        } catch {}
+        } catch (error) {
+          console.error("Failed to install PWA:", error);
+        }
       }}
       title="تثبيت التطبيق على جهازك"
     >
