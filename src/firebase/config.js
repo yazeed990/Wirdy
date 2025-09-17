@@ -15,7 +15,7 @@ export const hasValidFirebaseConfig = () => {
     import.meta.env.VITE_FIREBASE_AUTH_DOMAIN &&
     import.meta.env.VITE_FIREBASE_PROJECT_ID
   );
-  
+
   // Debug logging
   console.log("Firebase Config Check:", {
     hasApiKey: !!import.meta.env.VITE_FIREBASE_API_KEY,
@@ -27,6 +27,6 @@ export const hasValidFirebaseConfig = () => {
     environment: import.meta.env.MODE,
     isProduction: import.meta.env.PROD,
   });
-  
+
   return hasConfig;
 };

@@ -2097,9 +2097,9 @@ button:focus-visible {
   cursor: not-allowed;
 }
 
-/* ULTRA-AGGRESSIVE CAROUSEL FIX */
+/* CAROUSEL FIX - LTR for proper sliding direction */
 .arabic-carousel {
-  direction: rtl !important;
+  direction: ltr !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -2108,7 +2108,7 @@ button:focus-visible {
 }
 
 .arabic-carousel .p-carousel-content {
-  direction: rtl !important;
+  direction: ltr !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -2117,7 +2117,7 @@ button:focus-visible {
 }
 
 .arabic-carousel .p-carousel-container {
-  direction: rtl !important;
+  direction: ltr !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -2126,7 +2126,7 @@ button:focus-visible {
 }
 
 .arabic-carousel .p-carousel-items-content {
-  direction: rtl !important;
+  direction: ltr !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -2204,6 +2204,12 @@ button:focus-visible {
 .arabic-carousel .p-carousel-item:last-child {
   padding-right: 0 !important;
   margin-right: 0 !important;
+}
+
+/* Ensure Arabic content inside cards displays RTL */
+.arabic-carousel .arabic-program-card {
+  direction: rtl !important;
+  text-align: right !important;
 }
 
 /* Force specific widths at each breakpoint */
