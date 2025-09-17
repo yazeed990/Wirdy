@@ -23,11 +23,12 @@ export const hasValidFirebaseConfig = () => {
     hasApiKey: !!import.meta.env.VITE_FIREBASE_API_KEY,
     hasAuthDomain: !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     hasProjectId: !!import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? "SET" : "MISSING",
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? import.meta.env.VITE_FIREBASE_API_KEY.substring(0, 10) + "..." : "MISSING",
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "MISSING",
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "MISSING",
     environment: import.meta.env.MODE,
     isProduction: import.meta.env.PROD,
+    allEnvVars: Object.keys(import.meta.env).filter(key => key.startsWith('VITE_FIREBASE'))
   });
 
   return hasConfig;
