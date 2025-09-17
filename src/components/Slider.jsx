@@ -105,7 +105,6 @@ export default function ProgramSlider() {
       return {
         background: gradients[indexx % gradients.length],
         color: [5, 6].includes(indexx) ? "#333" : "white",
-        direction: "rtl",
       };
     };
     const current = !!(
@@ -171,7 +170,7 @@ export default function ProgramSlider() {
   };
 
   return (
-    <section className="arabic-slider-section" dir="rtl">
+    <section className="arabic-slider-section">
       <div className="slider-container">
         <div className="slider-header">
           <h2 className="slider-title">اختر طريقة الحفظ المناسبة</h2>
@@ -181,6 +180,7 @@ export default function ProgramSlider() {
         </div>
 
         <Carousel
+          dir="ltr"
           value={programs}
           numVisible={4}
           numScroll={1}
@@ -192,11 +192,6 @@ export default function ProgramSlider() {
           showIndicators={true}
           showNavigators={true}
           orientation="horizontal"
-          pt={{
-            root: { style: { direction: "rtl" } },
-            content: { style: { direction: "rtl" } },
-            container: { style: { direction: "rtl" } },
-          }}
         />
       </div>
     </section>
